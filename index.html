@@ -26,12 +26,10 @@
             font-weight: bold;
         }
 
-        /* Dosya yükleme butonunu gizle */
         #imageUpload {
             display: none;
         }
 
-        /* Özel buton ve sürükle bırak alanı */
         .upload-area {
             border: 2px dashed #4CAF50;
             padding: 20px;
@@ -69,14 +67,14 @@
     border-radius: 10px;
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px auto; /* Üst ve alt boşluk ekler, ortalar */
-    overflow: hidden; /* Taşmaları önler */
+    margin: 20px auto; 
+    overflow: hidden;
 }
 
 #uploaded-image-container img {
     width: auto;
     height: auto;
-    object-fit: contain; /* Resmin kırpılmasını önler, tam ortalar */
+    object-fit: contain; 
     border-radius: 10px;
 }
 
@@ -98,7 +96,7 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 250px; /* Logo boyutu ayarlanabilir */
+    width: 250px; 
     height: auto;
 }
 
@@ -133,10 +131,8 @@
 
 
 
-    <!-- Gizli dosya yükleme input'u -->
     <input type="file" id="imageUpload" accept="image/*">
 
-    <!-- Sürükle bırak alanı + Buton birleşti -->
     <div id="drop-area" class="upload-area">
         <p>Fotoğrafı buraya sürükleyin veya tıklayın</p>
     </div>
@@ -144,7 +140,6 @@
     <div id="uploaded-image-container"></div>
     <div id="label-container"></div>
 
-    <!-- Logo Alanı -->
 <div id="logo-container">
     <img src="logo.png" alt="Logo">
 </div>
@@ -166,7 +161,6 @@
             labelContainer = document.getElementById("label-container");
         }
 
-        // Butona tıklayınca dosya seçme ekranı açılır
         dropArea.addEventListener("click", () => {
             fileInput.click();
         });
@@ -223,19 +217,16 @@ function goToAbout() {
             return;
         }
 
-        // Modelin beklentisini karşılamak için yeni bir HTMLImageElement oluşturuyoruz
         const img = new Image();
         img.src = imageElement.src;
 
         img.onload = async () => {
-            // Modelin resmi işleyebilmesi için onu Canvas'a çiziyoruz
             const canvas = document.createElement("canvas");
             const ctx = canvas.getContext("2d");
             canvas.width = 224;
             canvas.height = 224;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-            // Modelin çalıştırılması
             const prediction = await model.predict(canvas);
             let highestPrediction = prediction[0];
 
@@ -245,7 +236,6 @@ function goToAbout() {
                 }
             }
 
-            // Tahmini ekrana yazdır
             labelContainer.innerHTML = `${highestPrediction.className}`;
         };
 
@@ -261,7 +251,6 @@ function goToAbout() {
 
 
 
-        // Sürükle bırak olayları
         dropArea.addEventListener("dragover", (e) => {
             e.preventDefault();
             dropArea.classList.add("hover");
