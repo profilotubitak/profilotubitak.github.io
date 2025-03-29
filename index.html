@@ -106,11 +106,28 @@
     width: 100%;
     height: auto;
 }
+.custom-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 0;
+}
+
+.custom-button:hover {
+    background-color: #45a049;
+}
 
     </style>
 </head>
 <body>
     <img src="besmele.png" alt="Bismillah" style="width: 300px; height: auto; margin-bottom: 20px;">
+    <button class="custom-button" onclick="goToPage()">400 Fotoğraflı Model</button>
 
 
     <!-- Gizli dosya yükleme input'u -->
@@ -183,6 +200,9 @@
 
 
 
+function goToPage() {
+    window.location.href = "/400.html";
+}
 
         function displayImage(image) {
             const imgContainer = document.getElementById("uploaded-image-container");
