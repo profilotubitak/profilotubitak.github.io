@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachable Machine Image Model</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Dosya yükleme butonunu gizle */
+        #imageUpload {
+            display: none;
+        }
+
+        /* Özel buton ve sürükle bırak alanı */
+        .upload-area {
+            border: 2px dashed #4CAF50;
+            padding: 20px;
+            width: 300px;
+            height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background-color: #fff;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            background-color: #e8f5e9;
+            border-color: #388e3c;
+        }
+
+        .upload-area p {
+            font-size: 1rem;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        #uploaded-image-container {
+    width: 450px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* Üst ve alt boşluk ekler, ortalar */
+    overflow: hidden; /* Taşmaları önler */
+}
+
+#uploaded-image-container img {
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Resmin kırpılmasını önler, tam ortalar */
+    border-radius: 10px;
+}
+
+
+
+        #label-container {
+            margin-top: 20px;
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1.2rem;
+            color: #333;
+            text-align: center;
+            width: 250px;
+        }
+
+        #logo-container {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 250px; /* Logo boyutu ayarlanabilir */
+    height: auto;
+}
+
+#logo-container img {
+    width: 100%;
+    height: auto;
+}
+.custom-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 0;
+}
+
+.custom-button:hover {
+    background-color: #45a049;
+}
+
+    </style>
+</head>
+<body>
+    <img src="besmele.png" alt="Bismillah" style="width: 300px; height: auto; margin-bottom: 20px;">
+    <button class="custom-button" onclick="goToPage()">200 Fotoğraflı Model</button>
+
+
+
+    <!-- Gizli dosya yükleme input'u -->
+    <input type="file" id="imageUpload" accept="image/*">
+
+    <!-- Sürükle bırak alanı + Buton birleşti -->
+    <div id="drop-area" class="upload-area">
+        <p>Fotoğrafı buraya sürükleyin veya tıklayın</p>
+    </div>
+
+    <div id="uploaded-image-container"></div>
+    <div id="label-container"></div>
+
+    <!-- Logo Alanı -->
+<div id="logo-container">
+    <img src="logo.png" alt="Logo">
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script>
+        const URL = "https://teachablemachine.withgoogle.com/models/FQDJhiGWx/";
+        let model, labelContainer, maxPredictions;
+        const fileInput = document.getElementById("imageUpload");
+        const dropArea = document.getElementById("drop-area");
+
+        async function init() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+            labelContainer = document.getElementById("label-container");
+        }
+
+        // Butona tıklayınca dosya seçme ekranı açılır
+        dropArea.addEventListener("click", () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
+        function handleFile(file) {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+        const imgElement = document.createElement("img");
+        imgElement.src = event.target.result;
+
+        imgElement.onload = () => {
+            displayImage(imgElement);
+            predict(imgElement);
+        };
+
+        imgElement.onerror = () => {
+            console.error("Resim yüklenemedi.");
+        };
+    };
+
+    reader.readAsDataURL(file);
+}
+
+
+
+
+function goToPage() {
+    window.location.href = "/";
+}
+
+
+
+        function displayImage(image) {
+            const imgContainer = document.getElementById("uploaded-image-container");
+            imgContainer.innerHTML = "";
+            imgContainer.appendChild(image);
+        }
+
+        async function predict(imageElement) {
+    try {
+        if (!(imageElement instanceof HTMLImageElement)) {
+            console.error("Hata: Resim öğesi geçersiz!");
+            return;
+        }
+
+        // Modelin beklentisini karşılamak için yeni bir HTMLImageElement oluşturuyoruz
+        const img = new Image();
+        img.src = imageElement.src;
+
+        img.onload = async () => {
+            // Modelin resmi işleyebilmesi için onu Canvas'a çiziyoruz
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            canvas.width = 224;
+            canvas.height = 224;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Modelin çalıştırılması
+            const prediction = await model.predict(canvas);
+            let highestPrediction = prediction[0];
+
+            for (let i = 1; i < prediction.length; i++) {
+                if (prediction[i].probability > highestPrediction.probability) {
+                    highestPrediction = prediction[i];
+                }
+            }
+
+            // Tahmini ekrana yazdır
+            labelContainer.innerHTML = `${highestPrediction.className}`;
+        };
+
+        img.onerror = () => {
+            console.error("Yüklenen resim işlenemedi.");
+        };
+    } catch (error) {
+        console.error("Error in prediction:", error);
+    }
+}
+
+
+
+
+
+        // Sürükle bırak olayları
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.classList.add("hover");
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.classList.remove("hover");
+        });
+
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.classList.remove("hover");
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
+        init();
+    </script>
+</body>
+</html>
