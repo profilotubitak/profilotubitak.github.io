@@ -128,11 +128,9 @@
     <source src="sarki.mp3" type="audio/mp3">
     Tarayıcınız ses elementini desteklemiyor.
 </audio>
-    <button onclick="toggleMusic()" class="custom-button" style="top: 90px;">Müziği Aç</button>
     <img src="besmele.png" alt="Bismillah" style="width: 300px; height: auto; margin-bottom: 20px;">
     <h1>200 Fotoğraflık Model</h1>
-    <button class="custom-button" onclick="goToPage()">400 Fotoğraflı Model</button>
-    <button class="custom-button" style="top: 50px;" onclick="goToAbout()">Hakkında</button>
+
 
 
 
@@ -153,20 +151,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <script>
-        let isPlaying = false;
-    const music = document.getElementById("background-music");
-    const musicButton = document.querySelector("button[onclick='toggleMusic()']");
-
-    function toggleMusic() {
-        if (isPlaying) {
-            music.pause();
-            musicButton.innerText = "Müziği Aç";
-        } else {
-            music.play();
-            musicButton.innerText = "Müziği Kapat";
-        }
-        isPlaying = !isPlaying;
-    }
+        
         const URL = "https://teachablemachine.withgoogle.com/models/EocjMo4jI/";
         let model, labelContainer, maxPredictions;
         const fileInput = document.getElementById("imageUpload");
@@ -213,15 +198,6 @@
 
 
 
-
-
-
-function goToPage() {
-    window.location.href = "/400";
-}
-function goToAbout() {
-    window.location.href = "/hakkinda";
-}
 
         function displayImage(image) {
             const imgContainer = document.getElementById("uploaded-image-container");
