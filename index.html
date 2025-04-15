@@ -113,12 +113,13 @@
             max-width: 250px;
         }
 
-        #logo-container {
+       #logo-container {
             position: absolute;
             top: 10px;
             left: 10px;
             width: 120px;
             height: auto;
+            padding: 5px; /* kenarlardan boşluk */
         }
 
         #logo-container img {
@@ -126,17 +127,14 @@
             height: auto;
         }
 
+        /* SAĞ ÜST LOGO */
         #second-logo-container {
             position: absolute;
             top: 10px;
             right: 10px;
             width: 120px;
             height: auto;
-        }
-
-        #second-logo-container img {
-            width: 100%;
-            height: auto;
+            padding: 5px; /* kenarlardan boşluk */
         }
 
 
@@ -174,8 +172,16 @@
 
             #logo-container {
                 width: 120px;
+                top: 10px;
+                left: 10px;
             }
-
+    
+            #second-logo-container {
+                width: 100px;
+                top: 60px; /* biraz aşağı kaydır */
+                right: 10px;
+            }
+    
             .upload-area {
                 height: 200px;
             }
