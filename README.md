@@ -1,6 +1,6 @@
 
 
-![Orman Atık Algılama](./afis.jpg)  <!-- Buraya yüklediğiniz fotoğrafın dosya adını ekleyin -->
+![Orman Atık Algılama](./afiş.jpg)  <!-- Buraya yüklediğiniz fotoğrafın dosya adını ekleyin -->
 
 # Orman Atık Algılama Uygulaması
 
