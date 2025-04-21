@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ormanda Bulunan Atıkları Tanıyan Uygulama</title>
     <meta name="description" content="Bu web uygulaması, Teachable Machine kullanılarak geliştirilen bir yapay zeka modeliyle orman fotoğraflarını analiz eder ve çevresel kirliliği algılar.">
 
@@ -20,29 +20,102 @@
     <meta name="twitter:image" content="https://profilotubitak.github.io/logo.png">
     
     <link rel="icon" href="logo.png" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2E7D32;
+            --primary-light: #4CAF50;
+            --primary-dark: #1B5E20;
+            --secondary-color: #E8F5E9;
+            --text-color: #333333;
+            --background-color: #F9F9F9;
+            --card-color: #FFFFFF;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
             min-height: 100vh;
+            display: flex;
             flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+        }
+
+        header {
             text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
         }
 
         h1 {
-            color: #333;
-            font-size: 2rem;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 20px 0;
+            color: var(--primary-dark);
+        }
+
+        .bismillah-img {
+            width: 280px;
+            max-width: 100%;
+            height: auto;
             margin-bottom: 20px;
-            font-weight: bold;
+        }
+
+        .logo-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 100px;
+            height: auto;
+            z-index: 10;
+        }
+
+        .second-logo-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 100px;
+            height: auto;
+            z-index: 10;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .upload-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
         }
 
         #imageUpload {
@@ -50,176 +123,231 @@
         }
 
         .upload-area {
-            border: 2px dashed #4CAF50;
-            padding: 20px;
-            width: 90%;
-            max-width: 300px;
+            border: 2px dashed var(--primary-light);
+            padding: 30px;
+            width: 100%;
+            max-width: 400px;
             height: 250px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background-color: #fff;
-            margin-top: 20px;
-            border-radius: 10px;
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
         }
 
         .upload-area:hover {
-            background-color: #e8f5e9;
-            border-color: #388e3c;
+            background-color: var(--secondary-color);
+            border-color: var(--primary-dark);
+            transform: translateY(-5px);
         }
 
         .upload-area p {
-            font-size: 1rem;
-            color: #4CAF50;
-            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            margin-top: 15px;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-light);
+            margin-bottom: 10px;
         }
 
         #uploaded-image-container {
-            width: 90%;
-            max-width: 450px;
-            height: auto;
+            width: 100%;
+            max-width: 500px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--shadow);
             margin: 20px auto;
             overflow: hidden;
             flex-direction: column;
+            min-height: 200px;
         }
 
         #uploaded-image-container img {
             width: 100%;
             height: auto;
             object-fit: contain;
-            border-radius: 10px;
+            border-radius: calc(var(--border-radius) - 5px);
         }
 
         #label-container {
             margin-top: 20px;
-            background-color: #ffffff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            font-size: 1.2rem;
-            color: #333;
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-dark);
             text-align: center;
-            width: 90%;
-            max-width: 250px;
-        }
-
-       #logo-container {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 120px;
-            height: auto;
-            padding: 5px; /* kenarlardan boşluk */
-        }
-
-        #logo-container img {
             width: 100%;
-            height: auto;
+            max-width: 400px;
+            transition: var(--transition);
+            border-left: 5px solid var(--primary-color);
         }
 
-        /* SAĞ ÜST LOGO */
-        #second-logo-container {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 120px;
-            height: auto;
-            padding: 5px; /* kenarlardan boşluk */
+        .result-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
         }
 
-
-        .custom-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 0;
+        .loading {
+            display: none;
+            margin: 20px 0;
+            text-align: center;
         }
 
-        .custom-button:hover {
-            background-color: #45a049;
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
         }
 
-        img {
-            max-width: 100%;
-            height: auto;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        @media (max-width: 600px) {
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 15px;
+                margin-top: 80px;
+            }
+
+            .logo-container, .second-logo-container {
+                width: 80px;
+            }
+
+            .upload-area {
+                height: 200px;
+                padding: 20px;
+            }
+
+            #label-container {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
             h1 {
                 font-size: 1.5rem;
             }
 
-            .custom-button {
-                font-size: 14px;
-                padding: 8px 16px;
+            .bismillah-img {
+                width: 220px;
             }
 
-            #logo-container {
-                width: 120px;
+            .logo-container, .second-logo-container {
+                width: 60px;
             }
-    
+
             .upload-area {
-                height: 200px;
+                height: 180px;
             }
 
-            #label-container {
+            .upload-area p {
                 font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-
-    <img src="besmele.png" alt="Bismillah" style="width: 300px; height: auto; margin-bottom: 20px;">
-
-    <input type="file" id="imageUpload" accept="image/*">
-
-    <div id="drop-area" class="upload-area">
-        <p>Fotoğrafı buraya sürükleyin veya tıklayın</p>
+    <div class="logo-container">
+        <img src="logo.png" alt="Logo" class="logo-img">
     </div>
 
-    <div id="uploaded-image-container"></div>
-    <div id="label-container"></div>
-
-    <div id="logo-container">
-        <img src="logo.png" alt="Logo">
+    <div class="second-logo-container">
+        <img src="tubitak.png" alt="TÜBİTAK Logo" class="logo-img">
     </div>
 
-    <div id="second-logo-container">
-        <img src="tubitak.png" alt="İkinci Logo">
-    </div>
+    <div class="container">
+        <header>
+            <img src="besmele.png" alt="Bismillah" class="bismillah-img">
+            <h1>Ormanda Bulunan Atıkları Tanıyan Uygulama</h1>
+        </header>
 
+        <div class="upload-section">
+            <input type="file" id="imageUpload" accept="image/*">
+            
+            <div id="drop-area" class="upload-area">
+                <div class="upload-icon">📷</div>
+                <p>Fotoğrafı buraya sürükleyin veya tıklayın</p>
+            </div>
+        </div>
+
+        <div class="result-section">
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>Analiz ediliyor...</p>
+            </div>
+            
+            <div id="uploaded-image-container"></div>
+            <div id="label-container"></div>
+        </div>
+
+        <footer>
+            <p>© 2024 Orman Temizliği Algılama Uygulaması | TÜBİTAK Projesi</p>
+        </footer>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
     <script>
         const URL = "https://teachablemachine.withgoogle.com/models/EocjMo4jI/";
-        let model, labelContainer, maxPredictions;
+        
         const fileInput = document.getElementById("imageUpload");
         const dropArea = document.getElementById("drop-area");
+        const uploadedImageContainer = document.getElementById("uploaded-image-container");
+        const labelContainer = document.getElementById("label-container");
+        const loadingElement = document.getElementById("loading");
+        
+        let model, maxPredictions;
 
         async function init() {
-            const modelURL = URL + "model.json";
-            const metadataURL = URL + "metadata.json";
-            model = await tmImage.load(modelURL, metadataURL);
-            maxPredictions = model.getTotalClasses();
-            labelContainer = document.getElementById("label-container");
+            try {
+                const modelURL = URL + "model.json";
+                const metadataURL = URL + "metadata.json";
+                
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+                
+                console.log("Model loaded successfully");
+            } catch (error) {
+                console.error("Model initialization error:", error);
+                labelContainer.innerHTML = "Model yüklenirken bir hata oluştu. Lütfen sayfayı yenileyin.";
+            }
         }
 
         dropArea.addEventListener("click", () => {
@@ -233,7 +361,33 @@
             }
         });
 
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.style.backgroundColor = "var(--secondary-color)";
+            dropArea.style.borderColor = "var(--primary-dark)";
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.style.backgroundColor = "var(--card-color)";
+            dropArea.style.borderColor = "var(--primary-light)";
+        });
+
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.style.backgroundColor = "var(--card-color)";
+            dropArea.style.borderColor = "var(--primary-light)";
+            
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        });
+
         function handleFile(file) {
+            loadingElement.style.display = "block";
+            
+            labelContainer.innerHTML = "";
+            
             const reader = new FileReader();
             reader.onload = function (event) {
                 const imgElement = document.createElement("img");
@@ -246,25 +400,32 @@
 
                 imgElement.onerror = () => {
                     console.error("Resim yüklenemedi.");
+                    loadingElement.style.display = "none";
+                    labelContainer.innerHTML = "Resim yüklenemedi. Lütfen geçerli bir resim dosyası seçin.";
                 };
             };
             reader.readAsDataURL(file);
         }
 
         function displayImage(image) {
-            const imgContainer = document.getElementById("uploaded-image-container");
-            imgContainer.innerHTML = "";
-            imgContainer.appendChild(image);
+            uploadedImageContainer.innerHTML = "";
+            uploadedImageContainer.appendChild(image);
         }
 
         async function predict(imageElement) {
             try {
+                if (!model) {
+                    await init();
+                }
+                
                 if (!(imageElement instanceof HTMLImageElement)) {
                     console.error("Hata: Resim öğesi geçersiz!");
+                    loadingElement.style.display = "none";
                     return;
                 }
 
                 const img = new Image();
+                img.crossOrigin = "anonymous";
                 img.src = imageElement.src;
 
                 img.onload = async () => {
@@ -275,42 +436,32 @@
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
                     const prediction = await model.predict(canvas);
+                    
                     let highestPrediction = prediction[0];
-
                     for (let i = 1; i < prediction.length; i++) {
                         if (prediction[i].probability > highestPrediction.probability) {
                             highestPrediction = prediction[i];
                         }
                     }
 
-                    labelContainer.innerHTML = `${highestPrediction.className}`;
+                    const percentage = Math.round(highestPrediction.probability * 100);
+                    
+                    labelContainer.innerHTML = `${highestPrediction.className} (${percentage}%)`;
+                    
+                    loadingElement.style.display = "none";
                 };
 
                 img.onerror = () => {
                     console.error("Yüklenen resim işlenemedi.");
+                    loadingElement.style.display = "none";
+                    labelContainer.innerHTML = "Resim işlenemedi. Lütfen başka bir resim deneyin.";
                 };
             } catch (error) {
-                console.error("Error in prediction:", error);
+                console.error("Prediction error:", error);
+                loadingElement.style.display = "none";
+                labelContainer.innerHTML = "Analiz sırasında bir hata oluştu. Lütfen tekrar deneyin.";
             }
         }
-
-        dropArea.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            dropArea.classList.add("hover");
-        });
-
-        dropArea.addEventListener("dragleave", () => {
-            dropArea.classList.remove("hover");
-        });
-
-        dropArea.addEventListener("drop", (e) => {
-            e.preventDefault();
-            dropArea.classList.remove("hover");
-            const file = e.dataTransfer.files[0];
-            if (file) {
-                handleFile(file);
-            }
-        });
 
         init();
     </script>
